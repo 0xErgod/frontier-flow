@@ -5,7 +5,7 @@ import type { BundledDependencySnapshot, ResolvedDependencies } from "../src/com
 import { loadMoveBuilderLite, moveBuilderLiteWasmUrl, verifyMoveBuilderLiteIntegrity } from "../src/compiler/moveBuilderLite";
 import { canonicalizeResolvedDependencies, createSnapshotValidationResult } from "../src/deployment/dependencySnapshotValidation";
 
-interface CacheSnapshotConfig {
+export interface CacheSnapshotConfig {
   readonly sourceVersionTag: string;
   readonly repositoryUrl: string;
   readonly subdirectory: string;
@@ -65,7 +65,12 @@ function createBundledSnapshot(
   return bundledSnapshot;
 }
 
-function createSyntheticFiles(sourceVersionTag: string, repositoryUrl: string, subdirectory: string): Record<string, string> {
+/**
+ * Build the throwaway root package used only to resolve the pinned world
+ * dependency. `world` is the dependency name, so it must not also be declared
+ * as a named address: Move.lock V4 rejects that as a duplicate.
+ */
+export function createSyntheticFiles(sourceVersionTag: string, repositoryUrl: string, subdirectory: string): Record<string, string> {
   return {
     "Move.toml": [
       "[package]",
@@ -78,10 +83,31 @@ function createSyntheticFiles(sourceVersionTag: string, repositoryUrl: string, s
       "[addresses]",
       'builder_extensions = "0x0"',
       'starter_contract = "0x0"',
-      'world = "0x0"',
       "",
     ].join("\n"),
     "sources/starter_contract.move": "module builder_extensions::starter_contract {}\n",
+  };
+}
+
+/**
+ * Resolution request for one snapshot entry.
+ *
+ * The synthetic root package is local, so it must not be described with
+ * `rootGit`. Declaring it as the same git/rev/subdir triple that the `world`
+ * dependency points at makes the root its own dependency, which the resolver
+ * reports as `Dependency cycle detected: starter_contract -> starter_contract`.
+ */
+export function createDependencyResolutionRequest(snapshot: CacheSnapshotConfig): {
+  readonly files: Record<string, string>;
+  readonly wasm: string;
+  readonly network: "testnet";
+  readonly silenceWarnings: boolean;
+} {
+  return {
+    files: createSyntheticFiles(snapshot.sourceVersionTag, snapshot.repositoryUrl, snapshot.subdirectory),
+    wasm: moveBuilderLiteWasmUrl,
+    network: "testnet",
+    silenceWarnings: false,
   };
 }
 
@@ -99,18 +125,9 @@ async function main(): Promise<void> {
   await compilerModule.initMovePackageBuilder({ wasm: moveBuilderLiteWasmUrl });
 
   for (const snapshot of manifest.snapshots) {
-    const files = createSyntheticFiles(snapshot.sourceVersionTag, snapshot.repositoryUrl, snapshot.subdirectory);
-    const resolvedDependencies = await compilerModule.resolveMovePackageDependencies({
-      files,
-      wasm: moveBuilderLiteWasmUrl,
-      rootGit: {
-        git: snapshot.repositoryUrl,
-        rev: snapshot.sourceVersionTag,
-        subdir: snapshot.subdirectory,
-      },
-      network: "testnet",
-      silenceWarnings: false,
-    });
+    const resolvedDependencies = await compilerModule.resolveMovePackageDependencies(
+      createDependencyResolutionRequest(snapshot),
+    );
 
     const output = createBundledSnapshot(snapshot.sourceVersionTag, resolvedDependencies);
 
@@ -122,8 +139,11 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.stack ?? error.message : String(error);
-  console.error(message);
-  process.exitCode = 1;
-});
+// Run CLI if this is the main module
+if (import.meta.main) {
+  main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.stack ?? error.message : String(error);
+    console.error(message);
+    process.exitCode = 1;
+  });
+}
