@@ -38,4 +38,4 @@
 
 - [x] 6.1 Run `bun run lint` and `bunx tsc -b`.
 - [x] 6.2 Run the full `vitest run` suite: 878 passed, 1 skipped.
-- [ ] 6.3 Capture Authorize-view screenshots for the pull request.
+- [x] 6.3 Capture Authorize-view screenshots for the pull request, driving the running app with Playwright.
