@@ -1,8 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   ONBOARDING_ROUTE,
   buildOnboardingLink,
+  getAppRootPath,
+  getOnboardingPath,
+  isOnboardingPath,
   parseOnboardingLink,
   type OnboardingLinkParams,
 } from "../utils/onboardingLink";
@@ -58,5 +61,34 @@ describe("onboarding links", () => {
 
   it("does not double the separator when the origin carries a trailing slash", () => {
     expect(buildOnboardingLink(params, "https://example.test/")).toContain(`example.test${ONBOARDING_ROUTE}?`);
+  });
+});
+
+describe("base path handling", () => {
+  afterEach(() => { vi.unstubAllEnvs(); });
+
+  it("serves the route from the app root by default", () => {
+    expect(getOnboardingPath()).toBe(ONBOARDING_ROUTE);
+    expect(getAppRootPath()).toBe("/");
+    expect(isOnboardingPath("/onboard")).toBe(true);
+    expect(isOnboardingPath("/onboard/")).toBe(true);
+    expect(isOnboardingPath("/colophon")).toBe(false);
+  });
+
+  it("honours a non-root base path when the app is served from a subdirectory", () => {
+    vi.stubEnv("BASE_URL", "/flow/");
+
+    expect(getOnboardingPath()).toBe("/flow/onboard");
+    expect(getAppRootPath()).toBe("/flow/");
+    expect(isOnboardingPath("/flow/onboard")).toBe(true);
+    expect(isOnboardingPath("/onboard")).toBe(false);
+    expect(buildOnboardingLink(params, "https://example.test")).toContain("https://example.test/flow/onboard?");
+  });
+
+  it("tolerates a base path without a trailing slash", () => {
+    vi.stubEnv("BASE_URL", "/flow");
+
+    expect(getOnboardingPath()).toBe("/flow/onboard");
+    expect(getAppRootPath()).toBe("/flow/");
   });
 });

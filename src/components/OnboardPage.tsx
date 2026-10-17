@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import SharedExtensionTrustNotice from "./SharedExtensionTrustNotice";
 import type { StoredDeploymentState } from "../types/authorization";
 import { resolveSharedAuthorizationContract } from "../hooks/useAuthorizationContracts";
-import { parseOnboardingLink, type OnboardingLinkParams } from "../utils/onboardingLink";
+import { getAppRootPath, parseOnboardingLink, type OnboardingLinkParams } from "../utils/onboardingLink";
 import {
   addSharedExtension,
   loadSharedExtensions,
@@ -91,7 +91,7 @@ function OnboardSummary({ contract, params }: { readonly contract: StoredDeploym
  * Standalone onboarding route: resolve a shared contract from a link so a
  * turret owner can authorize against it without deploying anything.
  */
-function OnboardPage({ search, origin }: { readonly search?: string; readonly origin?: string }) {
+function OnboardPage({ search }: { readonly search?: string }) {
   const resolvedSearch = search ?? (typeof window === "undefined" ? "" : window.location.search);
   const state = useOnboardingTarget(resolvedSearch);
   const [isSaving, setIsSaving] = useState(false);
@@ -103,8 +103,8 @@ function OnboardPage({ search, origin }: { readonly search?: string; readonly or
     const extension: SharedExtension = { ...state.contract, targetId: state.params.targetId };
     saveSharedExtensions(storage, addSharedExtension(loadSharedExtensions(storage), extension));
     mergeUiState(storage, { activeView: "authorize", selectedDeploymentTarget: state.params.targetId });
-    if (typeof window !== "undefined") window.location.assign(origin ?? "/");
-  }, [origin, state]);
+    if (typeof window !== "undefined") window.location.assign(getAppRootPath());
+  }, [state]);
 
   return (
     <main aria-label="Onboarding page" className="mx-auto grid max-w-2xl gap-6 px-4 py-10 text-[var(--text-primary)]">
@@ -120,8 +120,8 @@ function OnboardPage({ search, origin }: { readonly search?: string; readonly or
       {state.status === "invalid" || state.status === "failed" ? (
         <section className="grid gap-3 border border-[var(--ui-border-dark)] p-4">
           <h2 className="font-heading text-sm uppercase tracking-[0.12em] text-[var(--brand-orange)]">This link cannot be used</h2>
-          <p className="text-sm text-[var(--text-secondary)]">{state.status === "invalid" ? state.reason : state.reason}</p>
-          <a className="text-sm text-[var(--brand-orange)] underline" href="/">Open Frontier Flow instead</a>
+          <p className="text-sm text-[var(--text-secondary)]">{state.reason}</p>
+          <a className="text-sm text-[var(--brand-orange)] underline" href={getAppRootPath()}>Open Frontier Flow instead</a>
         </section>
       ) : null}
 
@@ -146,7 +146,7 @@ function OnboardPage({ search, origin }: { readonly search?: string; readonly or
             >
               {isSaving ? "Opening…" : "Use this contract"}
             </button>
-            <a className="border border-[var(--ui-border-dark)] px-4 py-2 text-sm uppercase tracking-[0.12em] text-[var(--text-secondary)]" href="/">
+            <a className="border border-[var(--ui-border-dark)] px-4 py-2 text-sm uppercase tracking-[0.12em] text-[var(--text-secondary)]" href={getAppRootPath()}>
               Cancel
             </a>
           </div>

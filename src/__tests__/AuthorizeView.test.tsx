@@ -799,7 +799,7 @@ describe("AuthorizeView shared extensions", () => {
     render(<AuthorizeView deploymentState={null} />);
 
     expect(await screen.findByText(/This logic has not been simulated yet\./)).toBeVisible();
-    expect(screen.getByText(/whether this contract would target them/)).toBeVisible();
+    expect(screen.getByText(/will not prove how it behaves in game/)).toBeVisible();
     expect(screen.getByRole("button", { name: "Authorize Selected" })).toBeInTheDocument();
   });
 

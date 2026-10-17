@@ -1,7 +1,28 @@
 import type { SharedExtension } from "./sharedExtensionStorage";
 
-/** Route that turns a shared link into an authorizable contract. */
+/** Route that turns a shared link into an authorizable contract, relative to the app's base. */
 export const ONBOARDING_ROUTE = "/onboard";
+
+/** The app's base path, always with a trailing slash. */
+function appBasePath(): string {
+  const base = import.meta.env.BASE_URL;
+  return base.endsWith("/") ? base : `${base}/`;
+}
+
+/** The onboarding route as served, honouring a non-root base path. */
+export function getOnboardingPath(): string {
+  return `${appBasePath()}${ONBOARDING_ROUTE.replace(/^\/+/, "")}`;
+}
+
+/** The app root as served, for returning a reader to the standard views. */
+export function getAppRootPath(): string {
+  return appBasePath();
+}
+
+/** Whether a pathname addresses the onboarding route under the current base. */
+export function isOnboardingPath(pathname: string): boolean {
+  return pathname.replace(/\/+$/, "") === getOnboardingPath().replace(/\/+$/, "");
+}
 
 export const ONBOARDING_PARAM_PACKAGE = "package";
 export const ONBOARDING_PARAM_MODULE = "module";
@@ -70,5 +91,5 @@ export function buildOnboardingLink(params: OnboardingLinkParams, origin: string
     [ONBOARDING_PARAM_NETWORK, params.targetId],
   ]);
 
-  return `${origin.replace(/\/+$/, "")}${ONBOARDING_ROUTE}?${search.toString()}`;
+  return `${origin.replace(/\/+$/, "")}${getOnboardingPath()}?${search.toString()}`;
 }

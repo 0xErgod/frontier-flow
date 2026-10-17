@@ -957,24 +957,35 @@ function useSelectedContractAssurance(input: {
 }
 
 /**
- * Advisory shown before authorizing logic published by somebody else. It does
- * not gate the action: a turret owner may know exactly what they are applying,
- * and blocking them would be a worse failure than the one it prevents.
+ * Advisory shown before authorizing logic published by somebody else.
+ *
+ * A simulation asks the extension to rank one candidate the player describes,
+ * under one behaviour reason they pick. In game the turret supplies the real
+ * candidate list and reason, so a simulation probes the logic rather than
+ * demonstrating how it will behave in combat; the copy says so rather than
+ * implying a clean bill of health.
+ *
+ * It does not gate the action either: a turret owner may know exactly what they
+ * are applying, and blocking them would be a worse failure than the one it
+ * prevents.
  */
 function SharedContractSimulationNotice({ isSimulated }: { readonly isSimulated: boolean }) {
   if (isSimulated) {
     return (
       <p className="ff-authorize-view__selection-summary text-xs text-[var(--text-secondary)]">
-        Simulated in this session. Re-run the simulation with a different character, ship, or tribe if
-        you want to see how this logic treats another target.
+        Simulated in this session against one candidate you described. In game the turret supplies the
+        candidate list and the behaviour reason, so this probes the logic rather than settling how it
+        behaves; try other characters, ships, or tribes to probe it further.
       </p>
     );
   }
 
   return (
     <p className="ff-authorize-view__selection-summary text-xs text-[var(--brand-orange)]">
-      This logic has not been simulated yet. Simulate a turret above with yourself or a tribemate as
-      the candidate to see whether this contract would target them, before you authorize it.
+      This logic has not been simulated yet. Simulating asks it to rank a single candidate you
+      describe &mdash; yourself or a tribemate, say &mdash; under one behaviour reason you choose. That
+      will not prove how it behaves in game, where the turret supplies the real list, but it is worth
+      probing before you authorize.
     </p>
   );
 }

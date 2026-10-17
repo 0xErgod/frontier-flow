@@ -20,7 +20,7 @@ import type { RemediationNotice } from "./types/nodes";
 import type { StoredDeploymentState } from "./types/authorization";
 import { useHasSharedExtensions } from "./hooks/useSharedExtensions";
 import { loadSharedExtensions } from "./utils/sharedExtensionStorage";
-import { ONBOARDING_ROUTE } from "./utils/onboardingLink";
+import { isOnboardingPath } from "./utils/onboardingLink";
 import { classifyGitHubErrorMessage } from "./utils/githubAuthClient";
 import { createNamedFlowContract, loadContractLibrary } from "./utils/contractStorage";
 import { createCompilationGraphKey } from "./utils/compilationGraphKey";
@@ -1279,7 +1279,7 @@ function App() {
     );
   }
 
-  if (pathname === ONBOARDING_ROUTE) {
+  if (isOnboardingPath(pathname)) {
     return (
       <Suspense fallback={<main className="flex min-h-[100dvh]" aria-label="Onboarding loading" />}>
         <OnboardPage />

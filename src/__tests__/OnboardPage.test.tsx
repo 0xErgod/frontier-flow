@@ -97,7 +97,7 @@ describe("OnboardPage", () => {
     const assign = vi.fn();
     Object.defineProperty(window, "location", { configurable: true, value: { assign, origin: "http://localhost", search: SEARCH } });
 
-    render(<OnboardPage search={SEARCH} origin="/" />);
+    render(<OnboardPage search={SEARCH} />);
     (await screen.findByRole("button", { name: "Use this contract" })).click();
 
     await waitFor(() => { expect(saved()).toEqual([expect.objectContaining({ packageId: PACKAGE })]); });
