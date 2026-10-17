@@ -6,6 +6,7 @@ import { useFrontierWalletSession } from "../wallet/hooks";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { StoredDeploymentState } from "../types/authorization";
+import type { TurretSimulationSession } from "../types/turretSimulation";
 import { getDeploymentTarget } from "../data/deploymentTargets";
 import { useAuthorization } from "../hooks/useAuthorization";
 import { useAuthorizationContracts } from "../hooks/useAuthorizationContracts";
@@ -13,6 +14,7 @@ import SharedExtensionTrustNotice from "./SharedExtensionTrustNotice";
 import { useSharedExtensions, type SharedExtensionControls } from "../hooks/useSharedExtensions";
 import { getSharedExtensionKey, type SharedExtension } from "../utils/sharedExtensionStorage";
 import { buildOnboardingLink } from "../utils/onboardingLink";
+import { isContractSimulated, isSharedContract } from "../utils/contractAssurance";
 import { useTurretSimulation } from "../hooks/useTurretSimulation";
 import { useTurretList } from "../hooks/useTurretList";
 import { formatAddress } from "../utils/formatAddress";
@@ -53,6 +55,8 @@ interface AuthorizeViewPrimaryPanelProps {
   readonly handleAuthorize: () => void;
   readonly handleOpenSimulation: (turretObjectId: string) => void;
   readonly handleSelectionChange: (turretIds: readonly string[]) => void;
+  readonly isSelectedContractShared: boolean;
+  readonly isSelectedContractSimulated: boolean;
   readonly listInstanceKey: number;
   readonly selectedTurretIds: readonly string[];
   readonly turretList: ReturnType<typeof useTurretList>;
@@ -93,6 +97,8 @@ interface AuthorizeViewModel {
   readonly selectedDeploymentState: StoredDeploymentState | null;
   readonly selectedSimulationTurretId: string | null;
   readonly selectedTurretIds: readonly string[];
+  readonly isSelectedContractShared: boolean;
+  readonly isSelectedContractSimulated: boolean;
   readonly turretList: ReturnType<typeof useTurretList>;
   readonly turretSimulation: ReturnType<typeof useTurretSimulation>;
 }
@@ -399,6 +405,7 @@ function useAuthorizeViewModel(input: {
     turrets: turretList.turrets,
     walletAddress: account?.address ?? null,
   });
+  const assurance = useSelectedContractAssurance({ deploymentKey, extensions: sharedExtensions.extensions, session: turretSimulation.session });
   const selection = useAuthorizeViewSelection({ authorization, deploymentKey, turretList });
   const selectedSimulationTurretId = useMemo(() => resolveSelectedSimulationTurretId({
     rawSelectedSimulationTurretId,
@@ -456,6 +463,8 @@ function useAuthorizeViewModel(input: {
     selectedDeploymentState,
     selectedSimulationTurretId,
     selectedTurretIds: selection.selectedTurretIds,
+    isSelectedContractShared: assurance.isSelectedContractShared,
+    isSelectedContractSimulated: assurance.isSelectedContractSimulated,
     turretList,
     turretSimulation,
   };
@@ -930,6 +939,46 @@ function useAuthorizeViewSelection(input: {
   };
 }
 
+/**
+ * Whether the selected contract came from somebody else, and whether it has
+ * been exercised in this session, so the authorize action can say so.
+ */
+function useSelectedContractAssurance(input: {
+  readonly deploymentKey: string | null;
+  readonly extensions: readonly SharedExtension[];
+  readonly session: TurretSimulationSession;
+}): { readonly isSelectedContractShared: boolean; readonly isSelectedContractSimulated: boolean } {
+  const { deploymentKey, extensions, session } = input;
+
+  return {
+    isSelectedContractShared: isSharedContract(deploymentKey, extensions),
+    isSelectedContractSimulated: isContractSimulated(deploymentKey, session),
+  };
+}
+
+/**
+ * Advisory shown before authorizing logic published by somebody else. It does
+ * not gate the action: a turret owner may know exactly what they are applying,
+ * and blocking them would be a worse failure than the one it prevents.
+ */
+function SharedContractSimulationNotice({ isSimulated }: { readonly isSimulated: boolean }) {
+  if (isSimulated) {
+    return (
+      <p className="ff-authorize-view__selection-summary text-xs text-[var(--text-secondary)]">
+        Simulated in this session. Re-run the simulation with a different character, ship, or tribe if
+        you want to see how this logic treats another target.
+      </p>
+    );
+  }
+
+  return (
+    <p className="ff-authorize-view__selection-summary text-xs text-[var(--brand-orange)]">
+      This logic has not been simulated yet. Simulate a turret above with yourself or a tribemate as
+      the candidate to see whether this contract would target them, before you authorize it.
+    </p>
+  );
+}
+
 function AuthorizeViewActions(input: {
   readonly isAuthorizing: boolean;
   readonly onAuthorize: () => void;
@@ -1016,6 +1065,8 @@ function AuthorizeViewPrimaryPanel({
   handleAuthorize,
   handleOpenSimulation,
   handleSelectionChange,
+  isSelectedContractShared,
+  isSelectedContractSimulated,
   listInstanceKey,
   selectedTurretIds,
   turretList,
@@ -1033,6 +1084,7 @@ function AuthorizeViewPrimaryPanel({
           onSelectionChange={handleSelectionChange}
           turrets={turretList.turrets}
         />
+        {isSelectedContractShared ? <SharedContractSimulationNotice isSimulated={isSelectedContractSimulated} /> : null}
         <AuthorizeViewActions
           isAuthorizing={authorization.isAuthorizing}
           onAuthorize={handleAuthorize}
@@ -1252,6 +1304,8 @@ function AuthorizeView({ activeView = "authorize", deploymentState, onViewChange
                 handleAuthorize={model.handleAuthorize}
                 handleOpenSimulation={model.handleOpenSimulation}
                 handleSelectionChange={model.handleSelectionChange}
+                isSelectedContractShared={model.isSelectedContractShared}
+                isSelectedContractSimulated={model.isSelectedContractSimulated}
                 listInstanceKey={model.listInstanceKey}
                 selectedTurretIds={model.selectedTurretIds}
                 turretList={model.turretList}

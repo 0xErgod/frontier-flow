@@ -446,7 +446,7 @@ function AppMainContent({
   if (activeView === "deploy") {
     return (
       <Suspense fallback={<MainContentFallback ariaLabel="Deploy workflow loading" />}>
-        <DeployWorkflowView deployment={deployment} />
+        <DeployWorkflowView deployment={deployment} deploymentState={authorizeDeploymentState} />
       </Suspense>
     );
   }

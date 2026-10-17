@@ -10,7 +10,8 @@
 - Resolve the named package through the same verification path the authorize field uses, and refuse the link when the module it names disagrees with the module the package declares, rather than silently preferring either.
 - Show what is being offered before a wallet is involved: contract name, module, the full package id, and the network, alongside the standing trust notice.
 - On explicit confirmation, save the contract as a shared extension and open the authorize view, where the reader still chooses which turrets to authorize.
-- Offer a share action beside each saved shared extension that copies the matching link.
+- Offer a share action beside each saved shared extension that copies the matching link, and the same action on the deployment status panel once a contract has been published, so an author can hand out what they just deployed.
+- Before authorizing logic published by somebody else, say whether that contract has been exercised in this simulation session, pointing at the simulate action already in the turret list. Simulation calls the extension's `get_target_priority_list` directly, so a contract can be run against a candidate before it is authorized; a turret owner can therefore ask "would this shoot me, or a tribemate?" first.
 
 ## Capabilities
 
@@ -20,13 +21,14 @@
 
 ### Modified Capabilities
 
-None. `shared-extension-authorization` is used as-is: the route resolves, verifies, and stores through its existing behaviour, and authorization itself is unchanged. This change adds a way to reach a contract, not a new way to authorize one.
+- `shared-extension-authorization`: adds a pre-authorization assurance requirement. The application MUST say whether logic published by somebody else has been simulated before it is authorized, without preventing authorization. Resolution, storage, and the authorization transaction are unchanged.
 
 ## Impact
 
-- New `src/utils/onboardingLink.ts`, `src/components/OnboardPage.tsx`, and `src/components/SharedExtensionTrustNotice.tsx`.
+- New `src/utils/onboardingLink.ts`, `src/utils/contractAssurance.ts`, `src/components/OnboardPage.tsx`, and `src/components/SharedExtensionTrustNotice.tsx`.
+- `src/components/DeployWorkflowView.tsx` gains the share action for a published contract.
 - `src/App.tsx` gains one pathname branch; `src/components/AuthorizeView.tsx` gains the share action and now renders the shared trust notice rather than its own copy of the text.
-- Tests: 15 link cases, 9 route cases, and 1 share-action case.
+- Tests: 15 link cases, 9 route cases, 9 assurance cases, 3 authorize-view cases, and 4 deploy-view cases.
 - The route is public and unauthenticated, as any link must be. It reads and writes only the browser's own storage.
 
 ## Deliberately out of scope
@@ -34,3 +36,5 @@ None. `shared-extension-authorization` is used as-is: the route resolves, verifi
 - **No tribe or group model.** The route onboards one person to one contract. Showing which members' turrets already run a contract needs a concept of membership the application does not have, and that is the expensive half of the idea.
 - **No directory of contracts.** Links are exchanged the way package ids already are.
 - **No preselection or auto-authorization from the link.** See `design.md`; this is the central safety property of the change rather than a simplification.
+- **No new simulation.** The advisory reports on the existing simulate action and the session it already keeps. No analysis of a contract's behaviour is performed, and nothing judges a simulation result on the player's behalf; reading the priority list remains theirs to do.
+- **No gate on authorization.** An unsimulated contract is reported, not blocked. A turret owner may know exactly what they are applying, and refusing them would be a worse failure than the one it prevents.

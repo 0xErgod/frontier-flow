@@ -788,6 +788,29 @@ describe("AuthorizeView shared extensions", () => {
     expect(link.searchParams.get("network")).toBe("testnet:stillness");
   });
 
+  it("says shared logic has not been simulated before it is authorized", async () => {
+    window.localStorage.setItem(SHARED_EXTENSION_STORAGE_KEY, JSON.stringify([{
+      version: 1, packageId: SHARED_PACKAGE, moduleName: "starter_contract", targetId: "testnet:stillness",
+      transactionDigest: SHARED_PACKAGE, deployedAt: new Date(0).toISOString(), contractName: "Starter Contract",
+    }]));
+    mockUseTurretList.mockReturnValue({ status: "success", turrets: turretFixtures, errorMessage: null, refresh: vi.fn() });
+    vi.stubGlobal("fetch", packageFetch());
+
+    render(<AuthorizeView deploymentState={null} />);
+
+    expect(await screen.findByText(/This logic has not been simulated yet\./)).toBeVisible();
+    expect(screen.getByText(/whether this contract would target them/)).toBeVisible();
+    expect(screen.getByRole("button", { name: "Authorize Selected" })).toBeInTheDocument();
+  });
+
+  it("does not nag about simulation for the wallet's own deployment", () => {
+    mockUseTurretList.mockReturnValue({ status: "success", turrets: turretFixtures, errorMessage: null, refresh: vi.fn() });
+
+    render(<AuthorizeView deploymentState={deploymentState} />);
+
+    expect(screen.queryByText(/has not been simulated yet/)).toBeNull();
+  });
+
   it("drops a saved shared extension on request", async () => {
     window.localStorage.setItem(SHARED_EXTENSION_STORAGE_KEY, JSON.stringify([{
       version: 1, packageId: SHARED_PACKAGE, moduleName: "starter_contract", targetId: "testnet:stillness",
