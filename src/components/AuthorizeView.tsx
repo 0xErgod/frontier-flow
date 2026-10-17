@@ -9,8 +9,10 @@ import type { StoredDeploymentState } from "../types/authorization";
 import { getDeploymentTarget } from "../data/deploymentTargets";
 import { useAuthorization } from "../hooks/useAuthorization";
 import { useAuthorizationContracts } from "../hooks/useAuthorizationContracts";
+import SharedExtensionTrustNotice from "./SharedExtensionTrustNotice";
 import { useSharedExtensions, type SharedExtensionControls } from "../hooks/useSharedExtensions";
 import { getSharedExtensionKey, type SharedExtension } from "../utils/sharedExtensionStorage";
+import { buildOnboardingLink } from "../utils/onboardingLink";
 import { useTurretSimulation } from "../hooks/useTurretSimulation";
 import { useTurretList } from "../hooks/useTurretList";
 import { formatAddress } from "../utils/formatAddress";
@@ -662,7 +664,25 @@ function AuthorizeContractSelector({
   );
 }
 
+async function copyOnboardingLink(
+  extension: SharedExtension,
+  setCopiedKey: (key: string | null) => void,
+): Promise<void> {
+  if (typeof window === "undefined") return;
+  const link = buildOnboardingLink(
+    { packageId: extension.packageId, moduleName: extension.moduleName, targetId: extension.targetId },
+    window.location.origin,
+  );
+  try {
+    await navigator.clipboard.writeText(link);
+    setCopiedKey(getSharedExtensionKey(extension));
+  } catch {
+    // Clipboard access can be refused; leaving the label unchanged says so.
+  }
+}
+
 function SharedExtensionField({ controls }: { readonly controls: SharedExtensionControls }) {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [packageId, setPackageId] = useState("");
   const [targetId, setTargetId] = useState<SharedExtension["targetId"]>("testnet:stillness");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -724,11 +744,7 @@ function SharedExtensionField({ controls }: { readonly controls: SharedExtension
         Paste a package id to use someone else&apos;s turret logic. Nothing is republished &mdash;
         your turret is pointed at their already-published contract.
       </p>
-      <p className="text-xs text-[var(--brand-orange)]">
-        Only authorize logic you trust. Checking a package confirms its identity
-        and TurretAuth declaration, not that its behavior is safe. Review the
-        contract and verify its package id and network before authorizing.
-      </p>
+      <SharedExtensionTrustNotice />
       {errorMessage === null ? null : (
         <p className="text-xs text-[var(--brand-orange)]">{errorMessage}</p>
       )}
@@ -741,14 +757,24 @@ function SharedExtensionField({ controls }: { readonly controls: SharedExtension
                 <span className="min-w-0 break-all">
                   {extension.contractName} &mdash; {formatAddress(extension.packageId)}::{extension.moduleName}
                 </span>
-                <button
-                  aria-label={`Remove ${extension.contractName}`}
-                  className="shrink-0 border border-[var(--ui-border-dark)] px-2 py-1 uppercase tracking-[0.12em]"
-                  onClick={() => { controls.onRemove(key); }}
-                  type="button"
-                >
-                  Remove
-                </button>
+                <span className="flex shrink-0 gap-1">
+                  <button
+                    aria-label={`Copy onboarding link for ${extension.contractName}`}
+                    className="border border-[var(--ui-border-dark)] px-2 py-1 uppercase tracking-[0.12em]"
+                    onClick={() => { void copyOnboardingLink(extension, setCopiedKey); }}
+                    type="button"
+                  >
+                    {copiedKey === key ? "Copied" : "Share"}
+                  </button>
+                  <button
+                    aria-label={`Remove ${extension.contractName}`}
+                    className="border border-[var(--ui-border-dark)] px-2 py-1 uppercase tracking-[0.12em]"
+                    onClick={() => { controls.onRemove(key); }}
+                    type="button"
+                  >
+                    Remove
+                  </button>
+                </span>
               </li>
             );
           })}

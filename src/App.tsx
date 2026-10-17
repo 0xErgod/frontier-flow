@@ -20,6 +20,7 @@ import type { RemediationNotice } from "./types/nodes";
 import type { StoredDeploymentState } from "./types/authorization";
 import { useHasSharedExtensions } from "./hooks/useSharedExtensions";
 import { loadSharedExtensions } from "./utils/sharedExtensionStorage";
+import { ONBOARDING_ROUTE } from "./utils/onboardingLink";
 import { classifyGitHubErrorMessage } from "./utils/githubAuthClient";
 import { createNamedFlowContract, loadContractLibrary } from "./utils/contractStorage";
 import { createCompilationGraphKey } from "./utils/compilationGraphKey";
@@ -37,6 +38,7 @@ const DeployWorkflowView = lazy(() => import("./components/DeployWorkflowView"))
 const KitchenSinkPage = lazy(() => import("./components/KitchenSinkPage"));
 const IconPreviewPage = lazy(() => import("./components/IconPreviewPage"));
 const ColophonPage = lazy(() => import("./components/ColophonPage"));
+const OnboardPage = lazy(() => import("./components/OnboardPage"));
 const MoveSourcePanel = lazy(() => import("./components/MoveSourcePanel"));
 const Sidebar = lazy(() => import("./components/Sidebar"));
 const TutorialOverlay = lazy(() => import("./components/TutorialOverlay"));
@@ -1273,6 +1275,14 @@ function App() {
     return (
       <Suspense fallback={<main className="flex min-h-[100dvh]" aria-label="Colophon loading" />}>
         <ColophonPage />
+      </Suspense>
+    );
+  }
+
+  if (pathname === ONBOARDING_ROUTE) {
+    return (
+      <Suspense fallback={<main className="flex min-h-[100dvh]" aria-label="Onboarding loading" />}>
+        <OnboardPage />
       </Suspense>
     );
   }

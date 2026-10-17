@@ -769,6 +769,25 @@ describe("AuthorizeView shared extensions", () => {
     expect(savedExtensions()).toEqual([]);
   });
 
+  it("offers an onboarding link for a saved shared extension", async () => {
+    const writeText = vi.fn<(text: string) => Promise<void>>(() => Promise.resolve());
+    Object.defineProperty(window.navigator, "clipboard", { configurable: true, value: { writeText } });
+    window.localStorage.setItem(SHARED_EXTENSION_STORAGE_KEY, JSON.stringify([{
+      version: 1, packageId: SHARED_PACKAGE, moduleName: "starter_contract", targetId: "testnet:stillness",
+      transactionDigest: SHARED_PACKAGE, deployedAt: new Date(0).toISOString(), contractName: "Starter Contract",
+    }]));
+    render(<AuthorizeView deploymentState={null} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy onboarding link for Starter Contract" }));
+
+    await waitFor(() => { expect(writeText).toHaveBeenCalledTimes(1); });
+    const link = new URL(writeText.mock.calls[0][0]);
+    expect(link.pathname).toBe("/onboard");
+    expect(link.searchParams.get("package")).toBe(SHARED_PACKAGE);
+    expect(link.searchParams.get("module")).toBe("starter_contract");
+    expect(link.searchParams.get("network")).toBe("testnet:stillness");
+  });
+
   it("drops a saved shared extension on request", async () => {
     window.localStorage.setItem(SHARED_EXTENSION_STORAGE_KEY, JSON.stringify([{
       version: 1, packageId: SHARED_PACKAGE, moduleName: "starter_contract", targetId: "testnet:stillness",
