@@ -20,5 +20,5 @@
 
 - [x] 4.1 Run `bun run lint` and `bunx tsc -b`.
 - [x] 4.2 Run the full `vitest run` suite.
-- [ ] 4.3 Run the Playwright suite, which asserts navigation state in `tests/e2e/authorize.spec.ts`.
-- [ ] 4.4 Capture before/after navigation screenshots for the pull request.
+- [x] 4.3 Run the Playwright suite: `authorize.spec.ts` and `authorization-readiness.spec.ts` pass, and no spec asserted the old disabled gate.
+- [x] 4.4 Capture navigation screenshots for the pull request, driving the running app with Playwright.
