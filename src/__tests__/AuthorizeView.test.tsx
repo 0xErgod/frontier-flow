@@ -719,6 +719,13 @@ describe("AuthorizeView shared extensions", () => {
     expect(screen.getByText("No contract selected. Add a shared logic package above, or deploy your own.")).toBeVisible();
   });
 
+  it("warns that verification covers identity, not safety", () => {
+    render(<AuthorizeView deploymentState={null} />);
+
+    expect(screen.getByText(/Only authorize logic you trust\./)).toBeVisible();
+    expect(screen.getByText(/confirms its identity and TurretAuth declaration, not that its behavior is safe/)).toBeVisible();
+  });
+
   it("names both routes to a contract rather than only deployment", () => {
     render(<AuthorizeView deploymentState={null} />);
 

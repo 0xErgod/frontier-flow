@@ -724,6 +724,11 @@ function SharedExtensionField({ controls }: { readonly controls: SharedExtension
         Paste a package id to use someone else&apos;s turret logic. Nothing is republished &mdash;
         your turret is pointed at their already-published contract.
       </p>
+      <p className="text-xs text-[var(--brand-orange)]">
+        Only authorize logic you trust. Checking a package confirms its identity
+        and TurretAuth declaration, not that its behavior is safe. Review the
+        contract and verify its package id and network before authorizing.
+      </p>
       {errorMessage === null ? null : (
         <p className="text-xs text-[var(--brand-orange)]">{errorMessage}</p>
       )}
