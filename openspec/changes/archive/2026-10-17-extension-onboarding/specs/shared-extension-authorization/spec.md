@@ -5,6 +5,8 @@ Before a turret owner authorizes a turret extension published by another account
 
 The application MUST NOT prevent authorization on the grounds that a contract has not been simulated, and MUST NOT present a verdict about whether a contract's behaviour is acceptable. Simulation output remains the player's to read.
 
+The application MUST NOT describe a simulation as establishing how an extension behaves in game. A simulation submits a single candidate described by the player under one behaviour reason they choose, while in play the turret supplies the candidate list and the reason; any statement about simulation MUST reflect that difference rather than implying a contract has been cleared.
+
 This requirement adds no simulation capability: it reports on the existing turret simulation, which calls an extension's target-priority entry point directly and therefore does not require the extension to be authorized first.
 
 #### Scenario: Shared logic has not been exercised
@@ -22,6 +24,10 @@ This requirement adds no simulation capability: it reports on the existing turre
 #### Scenario: Authorization is never blocked
 - **WHEN** a turret owner authorizes a shared contract that has not been simulated
 - **THEN** the authorization proceeds, having been reported rather than prevented
+
+#### Scenario: What a simulation is said to show
+- **WHEN** the application reports on a contract's simulation, exercised or not
+- **THEN** it describes the simulation as submitting one player-chosen candidate under one player-chosen behaviour reason, and does not present it as establishing in-game behaviour
 
 #### Scenario: The wallet's own deployment
 - **WHEN** the selected contract is the wallet's own deployment rather than one saved from another account

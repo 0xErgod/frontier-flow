@@ -36,19 +36,26 @@
 - [x] 6.2 Show the advisory before the authorize action when the selected contract came from another account, pointing at the existing simulate action.
 - [x] 6.3 Credit only a simulation result belonging to the selected contract.
 - [x] 6.4 Leave authorization enabled throughout, and pass no judgement on a simulation's output.
-- [x] 6.5 Show nothing for the wallet's own deployment.
+- [x] 6.5 State what a simulation does and does not show: one player-chosen candidate under one player-chosen behaviour reason, where the game supplies its own. Raised by @Scetrov in review on #137.
+- [x] 6.6 Show nothing for the wallet's own deployment.
 
 ## 7. Cover it with tests
 
-- [x] 7.1 15 link cases: well-formed, reordered parameters, empty link, ten malformed shapes, round-trip, trailing-slash origin.
+- [x] 7.1 18 link cases, including three base-path cases: well-formed, reordered parameters, empty link, ten malformed shapes, round-trip, trailing-slash origin.
 - [x] 7.2 9 route cases: verified presentation, trust notice, nothing saved before confirmation, three refused links with no network call, module mismatch, resolver failure, confirmation saving and opening authorize.
 - [x] 7.3 1 share case in the authorize view and 4 in the deploy view, asserting the copied link's route and all three parameters, and that nothing is offered for a local or absent deployment.
 - [x] 7.4 9 assurance cases covering shared detection, network-specific keys, and simulation credit.
 - [x] 7.5 2 authorize-view cases: the advisory for unexercised shared logic, and its absence for the wallet's own deployment.
 - [x] 7.6 Confirm the pre-existing authorize, deploy, and navigation suites still pass.
 
-## 8. Verify
+## 8. Honour the app's base path
 
-- [x] 8.1 Run `bun run lint` and `bunx tsc -b`.
-- [x] 8.2 Run the full `vitest run` suite.
-- [x] 8.3 Capture onboarding screenshots for the pull request, driving the route with Playwright against a stubbed package response.
+- [x] 8.1 Derive the route and the app root from `import.meta.env.BASE_URL` so links work when the app is served from a subdirectory. Raised by @Scetrov in review on #137.
+- [x] 8.2 Match the route against the base-aware path rather than a literal.
+- [x] 8.3 Drop the redundant `origin` prop from the onboarding page, which always resolved to the app root.
+
+## 9. Verify
+
+- [x] 9.1 Run `bun run lint` and `bunx tsc -b`.
+- [x] 9.2 Run the full `vitest run` suite.
+- [x] 9.3 Capture onboarding screenshots for the pull request, driving the route with Playwright against a stubbed package response.
