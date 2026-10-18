@@ -145,7 +145,7 @@ beforeEach(() => {
     dependencies: [
       "0x0000000000000000000000000000000000000000000000000000000000000001",
       "0x0000000000000000000000000000000000000000000000000000000000000002",
-      "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+      "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
     ],
     digest: [1, 2, 3],
     resolvedDependencies: {
@@ -167,7 +167,7 @@ beforeEach(() => {
       : [
           "0x0000000000000000000000000000000000000000000000000000000000000001",
           "0x0000000000000000000000000000000000000000000000000000000000000002",
-          "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+          "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
         ],
     errors: null,
     warnings: [],
@@ -181,7 +181,7 @@ beforeEach(() => {
         : [
             "0x0000000000000000000000000000000000000000000000000000000000000001",
             "0x0000000000000000000000000000000000000000000000000000000000000002",
-            "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+            "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
           ],
     },
   }));
@@ -240,8 +240,8 @@ describe("useDeployment success path", () => {
       transactionDigest: result.current.latestAttempt?.confirmationReference,
       deployedAt: new Date(result.current.latestAttempt?.endedAt ?? 0).toISOString(),
       contractName: artifact.moduleName,
-      sourceVersionTag: "v0.0.24",
-      builderToolchainVersion: "1.74.0",
+      sourceVersionTag: "d3c7016b48a796ee70ecff7b892316f2d0170282",
+      builderToolchainVersion: "1.78.0",
     });
   });
 

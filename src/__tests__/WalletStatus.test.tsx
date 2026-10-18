@@ -115,13 +115,13 @@ describe("WalletStatus", () => {
     mockRefreshPublishedWorldPackageManifest.mockReset();
     mockRefreshPublishedWorldPackageManifest.mockResolvedValue({
       "testnet:stillness": {
-        worldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-        originalWorldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+        worldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+        originalWorldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
         toolchainVersion: "1.74.0",
       },
       "testnet:utopia": {
-        worldPackageId: "0x07e6b810c2dff6df56ea7fbad9ff32f4d84cbee53e496267515887b712924bd1",
-        originalWorldPackageId: "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75",
+        worldPackageId: "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230",
+        originalWorldPackageId: "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230",
         toolchainVersion: "1.68.0",
       },
     });

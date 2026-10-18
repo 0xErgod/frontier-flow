@@ -73,10 +73,10 @@ original-id = "0xddd"
 
     // The active bundle is NOT modified by the observation.
     expect(getPackageReferenceBundle("testnet:stillness").worldPackageId).toBe(
-      "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+      "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
     );
-    expect(getPackageReferenceBundle("testnet:stillness").toolchainVersion).toBe("1.74.0");
-    expect(getPackageReferenceBundle("testnet:utopia").toolchainVersion).toBe("1.68.0");
+    expect(getPackageReferenceBundle("testnet:stillness").toolchainVersion).toBe("1.78.0");
+    expect(getPackageReferenceBundle("testnet:utopia").toolchainVersion).toBe("1.78.0");
 
     // No stored overrides are written.
     expect(window.localStorage.getItem(WORLD_PACKAGE_OVERRIDE_STORAGE_KEY)).toBeNull();
@@ -135,17 +135,17 @@ toolchain-version = "1.68.0"
       toolchainVersion: "1.67.1",
     });
     expect(getPackageReferenceBundle("testnet:stillness")).toMatchObject({
-      originalWorldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-      worldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-      objectRegistryId: "0xf6aed9361acc0d7021672b653ebe9dae45d88e11fecef01cc5434c8f60ae764f",
-      serverAddressRegistryId: "0xdb5f40fd5659e4f21d6b07ed3cedcd532a21a6054815a7b3fe3817631ed6dbd2",
-      sourceVersionTag: "v0.0.24",
-      toolchainVersion: "1.74.0",
+      originalWorldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+      worldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+      objectRegistryId: "0x8fd47e6e5cf8cb9b789cef26fbb674be819d8abd6afccaf50e95451212f0813a",
+      serverAddressRegistryId: "0xebd994c8fc605a0c5c6c2f5d652822c080f3dbc50b9f21a25c7797751a92cba0",
+      sourceVersionTag: "d3c7016b48a796ee70ecff7b892316f2d0170282",
+      toolchainVersion: "1.78.0",
     });
     expect(getPackageReferenceBundle("testnet:utopia")).toMatchObject({
-      originalWorldPackageId: "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75",
-      sourceVersionTag: "v0.0.21",
-      toolchainVersion: "1.68.0",
+      originalWorldPackageId: "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230",
+      sourceVersionTag: "d3c7016b48a796ee70ecff7b892316f2d0170282",
+      toolchainVersion: "1.78.0",
     });
   });
 
@@ -192,7 +192,7 @@ toolchain-version = "1.68.0"
 
     // The active bundle must remain the checked-in value, not the stored override.
     expect(getPackageReferenceBundle("testnet:stillness").worldPackageId).toBe(
-      "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+      "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
     );
   });
 
@@ -249,9 +249,9 @@ toolchain-version = "1.68.1"
   describe("manifest freshness outcomes", () => {
     it("returns matched when observation matches checked-in bundle", () => {
       const observation = {
-        worldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-        originalWorldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-        toolchainVersion: "1.74.0",
+        worldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+        originalWorldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+        toolchainVersion: "1.78.0",
       };
 
       const outcome = computeManifestFreshness("testnet:stillness", observation);
@@ -261,8 +261,8 @@ toolchain-version = "1.68.1"
     it("returns stale when published-at differs from checked-in bundle", () => {
       const observation = {
         worldPackageId: "0xdeadbeef",
-        originalWorldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-        toolchainVersion: "1.74.0",
+        originalWorldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+        toolchainVersion: "1.78.0",
       };
 
       const outcome = computeManifestFreshness("testnet:stillness", observation);
@@ -275,8 +275,8 @@ toolchain-version = "1.68.1"
 
     it("returns stale when toolchain-version differs", () => {
       const observation = {
-        worldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-        originalWorldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+        worldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+        originalWorldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
         toolchainVersion: "1.80.0",
       };
 
