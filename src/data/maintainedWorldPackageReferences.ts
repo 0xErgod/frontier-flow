@@ -15,7 +15,7 @@ export interface MaintainedWorldPackageReference {
 }
 
 export const RESOURCE_SOURCE = "https://docs.evefrontier.com/tools/resources";
-export const LAST_VERIFIED_ON = "2026-07-26";
+export const LAST_VERIFIED_ON = "2026-10-18";
 
 /**
  * Authoritative checked-in remote bundles. Keep every field in each entry
@@ -25,26 +25,26 @@ export const MAINTAINED_WORLD_PACKAGE_REFERENCES: readonly MaintainedWorldPackag
   {
     targetId: "testnet:stillness",
     environmentLabel: "Stillness",
-    worldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-    originalWorldPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-    objectRegistryId: "0xf6aed9361acc0d7021672b653ebe9dae45d88e11fecef01cc5434c8f60ae764f",
-    serverAddressRegistryId: "0xdb5f40fd5659e4f21d6b07ed3cedcd532a21a6054815a7b3fe3817631ed6dbd2",
-    sourceVersionTag: "v0.0.24",
-    toolchainVersion: "1.74.0",
-    publicationTransaction: "5rnk369zjxUZdo9Tovv8moGymDGAUnRUhhUutFH119nv",
+    worldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+    originalWorldPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+    objectRegistryId: "0x8fd47e6e5cf8cb9b789cef26fbb674be819d8abd6afccaf50e95451212f0813a",
+    serverAddressRegistryId: "0xebd994c8fc605a0c5c6c2f5d652822c080f3dbc50b9f21a25c7797751a92cba0",
+    sourceVersionTag: "d3c7016b48a796ee70ecff7b892316f2d0170282",
+    toolchainVersion: "1.78.0",
+    publicationTransaction: "GE8CbdfGtBBeZRJrg8QSWSyuNi2YnRaz6pQr8AAjn4RL",
     source: RESOURCE_SOURCE,
     lastVerifiedOn: LAST_VERIFIED_ON,
   },
   {
     targetId: "testnet:utopia",
     environmentLabel: "Utopia",
-    worldPackageId: "0x07e6b810c2dff6df56ea7fbad9ff32f4d84cbee53e496267515887b712924bd1",
-    originalWorldPackageId: "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75",
-    objectRegistryId: "0xc2b969a72046c47e24991d69472afb2216af9e91caf802684514f39706d7dc57",
-    serverAddressRegistryId: "0x9a9f2f7d1b8cf100feb532223aa6c38451edb05406323af5054f9d974555708b",
-    sourceVersionTag: "v0.0.21",
-    toolchainVersion: "1.68.0",
-    publicationTransaction: "AzBhmMFd9UTbr4m4hnSjSbBLkmVW3VESUDG15DGnCT8",
+    worldPackageId: "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230",
+    originalWorldPackageId: "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230",
+    objectRegistryId: "0xf37ce91dc59ed7fa5f036e50b65ec99681c36c3e35e89ce5135a77cf116c159d",
+    serverAddressRegistryId: "0xe3a45eef54bd74a63aeb88ceaaf3d0a37383fd583a35616a77180f1a1cf378d5",
+    sourceVersionTag: "d3c7016b48a796ee70ecff7b892316f2d0170282",
+    toolchainVersion: "1.78.0",
+    publicationTransaction: "8QZfYuNqeVXGzqxC8XZ5Z6GeWnQgSuEGTopRESHRNvo2",
     source: RESOURCE_SOURCE,
     lastVerifiedOn: LAST_VERIFIED_ON,
   },

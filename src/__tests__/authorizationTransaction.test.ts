@@ -265,8 +265,8 @@ describe("authorizationTransaction", () => {
     })).resolves.toBe("0xabcd");
 
     expect(typeof fetchFn.mock.calls[0]?.[1]?.body).toBe("string");
-    expect(fetchFn.mock.calls[0]?.[1]?.body).toContain("0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75::character::PlayerProfile");
+    expect(fetchFn.mock.calls[0]?.[1]?.body).toContain("0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230::character::PlayerProfile");
     expect(typeof fetchFn.mock.calls[1]?.[1]?.body).toBe("string");
-    expect(fetchFn.mock.calls[1]?.[1]?.body).toContain("0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75::access::OwnerCap<0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75::turret::Turret>");
+    expect(fetchFn.mock.calls[1]?.[1]?.body).toContain("0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230::access::OwnerCap<0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230::turret::Turret>");
   });
 });

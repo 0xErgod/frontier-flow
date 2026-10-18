@@ -21,14 +21,14 @@ function isSuiTestnetGraphQlEndpoint(value: string): boolean {
 
 const COHERENT_MANIFEST = `
 [published.testnet_stillness]
-published-at = "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1"
-original-id = "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1"
-toolchain-version = "1.74.0"
+published-at = "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92"
+original-id = "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92"
+toolchain-version = "1.78.0"
 
 [published.testnet_utopia]
-published-at = "0x07e6b810c2dff6df56ea7fbad9ff32f4d84cbee53e496267515887b712924bd1"
-original-id = "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75"
-toolchain-version = "1.68.0"
+published-at = "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230"
+original-id = "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230"
+toolchain-version = "1.78.0"
 `;
 
 /**
@@ -37,38 +37,38 @@ toolchain-version = "1.68.0"
 function createGraphQLHandler(): (body: string) => Response {
   const objectTypes: Record<string, string> = {
     // Stillness objects
-    "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1":
-      "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1::world::World",
-    "0xf6aed9361acc0d7021672b653ebe9dae45d88e11fecef01cc5434c8f60ae764f":
-      "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1::object_registry::ObjectRegistry",
-    "0xdb5f40fd5659e4f21d6b07ed3cedcd532a21a6054815a7b3fe3817631ed6dbd2":
-      "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1::access::ServerAddressRegistry",
+    "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92":
+      "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92::world::World",
+    "0x8fd47e6e5cf8cb9b789cef26fbb674be819d8abd6afccaf50e95451212f0813a":
+      "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92::object_registry::ObjectRegistry",
+    "0xebd994c8fc605a0c5c6c2f5d652822c080f3dbc50b9f21a25c7797751a92cba0":
+      "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92::access::ServerAddressRegistry",
     // Utopia objects
-    "0x07e6b810c2dff6df56ea7fbad9ff32f4d84cbee53e496267515887b712924bd1":
-      "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75::world::World",
-    "0xc2b969a72046c47e24991d69472afb2216af9e91caf802684514f39706d7dc57":
-      "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75::object_registry::ObjectRegistry",
-    "0x9a9f2f7d1b8cf100feb532223aa6c38451edb05406323af5054f9d974555708b":
-      "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75::access::ServerAddressRegistry",
+    "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230":
+      "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230::world::World",
+    "0xf37ce91dc59ed7fa5f036e50b65ec99681c36c3e35e89ce5135a77cf116c159d":
+      "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230::object_registry::ObjectRegistry",
+    "0xe3a45eef54bd74a63aeb88ceaaf3d0a37383fd583a35616a77180f1a1cf378d5":
+      "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230::access::ServerAddressRegistry",
   };
 
   const packageIds = new Set([
-    "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
-    "0x07e6b810c2dff6df56ea7fbad9ff32f4d84cbee53e496267515887b712924bd1",
+    "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
+    "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230",
   ]);
   const publicationTransactions: Record<string, { originalPackageId: string; registries: readonly [string, string][] }> = {
-    "5rnk369zjxUZdo9Tovv8moGymDGAUnRUhhUutFH119nv": {
-      originalPackageId: "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+    "GE8CbdfGtBBeZRJrg8QSWSyuNi2YnRaz6pQr8AAjn4RL": {
+      originalPackageId: "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
       registries: [
-        ["0xf6aed9361acc0d7021672b653ebe9dae45d88e11fecef01cc5434c8f60ae764f", objectTypes["0xf6aed9361acc0d7021672b653ebe9dae45d88e11fecef01cc5434c8f60ae764f"]],
-        ["0xdb5f40fd5659e4f21d6b07ed3cedcd532a21a6054815a7b3fe3817631ed6dbd2", objectTypes["0xdb5f40fd5659e4f21d6b07ed3cedcd532a21a6054815a7b3fe3817631ed6dbd2"]],
+        ["0x8fd47e6e5cf8cb9b789cef26fbb674be819d8abd6afccaf50e95451212f0813a", objectTypes["0x8fd47e6e5cf8cb9b789cef26fbb674be819d8abd6afccaf50e95451212f0813a"]],
+        ["0xebd994c8fc605a0c5c6c2f5d652822c080f3dbc50b9f21a25c7797751a92cba0", objectTypes["0xebd994c8fc605a0c5c6c2f5d652822c080f3dbc50b9f21a25c7797751a92cba0"]],
       ],
     },
-    "AzBhmMFd9UTbr4m4hnSjSbBLkmVW3VESUDG15DGnCT8": {
-      originalPackageId: "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75",
+    "8QZfYuNqeVXGzqxC8XZ5Z6GeWnQgSuEGTopRESHRNvo2": {
+      originalPackageId: "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230",
       registries: [
-        ["0xc2b969a72046c47e24991d69472afb2216af9e91caf802684514f39706d7dc57", objectTypes["0xc2b969a72046c47e24991d69472afb2216af9e91caf802684514f39706d7dc57"]],
-        ["0x9a9f2f7d1b8cf100feb532223aa6c38451edb05406323af5054f9d974555708b", objectTypes["0x9a9f2f7d1b8cf100feb532223aa6c38451edb05406323af5054f9d974555708b"]],
+        ["0xf37ce91dc59ed7fa5f036e50b65ec99681c36c3e35e89ce5135a77cf116c159d", objectTypes["0xf37ce91dc59ed7fa5f036e50b65ec99681c36c3e35e89ce5135a77cf116c159d"]],
+        ["0xe3a45eef54bd74a63aeb88ceaaf3d0a37383fd583a35616a77180f1a1cf378d5", objectTypes["0xe3a45eef54bd74a63aeb88ceaaf3d0a37383fd583a35616a77180f1a1cf378d5"]],
       ],
     },
   };
@@ -129,11 +129,8 @@ function createCoherentFetchClient(): FetchClient {
         return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
       }
 
-      // Tag-specific manifests
-      if (url.includes("/v0.0.24/contracts/world/Published.toml")) {
-        return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
-      }
-      if (url.includes("/v0.0.21/contracts/world/Published.toml")) {
+      // Pinned-revision manifest: both targets pin the same commit
+      if (url.includes("/d3c7016b48a796ee70ecff7b892316f2d0170282/contracts/world/Published.toml")) {
         return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
       }
 
@@ -172,13 +169,13 @@ describe("check-world-package-references", () => {
 
           if (url.includes("/main/contracts/world/Published.toml")) {
             const drifted = COHERENT_MANIFEST.replace(
-              "0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1",
+              "0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92",
               "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
             );
             return Promise.resolve(createManifestResponse(drifted));
           }
 
-          if (url.includes("/v0.0.24/contracts/world/Published.toml") || url.includes("/v0.0.21/contracts/world/Published.toml")) {
+          if (url.includes("/d3c7016b48a796ee70ecff7b892316f2d0170282/contracts/world/Published.toml")) {
             return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
           }
           if (isSuiTestnetGraphQlEndpoint(url)) {
@@ -213,15 +210,15 @@ describe("check-world-package-references", () => {
           }
 
           // Source tag returns different published-at for Stillness
-          if (url.includes("/v0.0.24/contracts/world/Published.toml")) {
+          if (url.includes("/d3c7016b48a796ee70ecff7b892316f2d0170282/contracts/world/Published.toml")) {
             const drifted = COHERENT_MANIFEST.replace(
-              "published-at = \"0x8b8a46ed766fa1358ce7c5c51f6a164b13d627a63e45343f69ed0ba0446c1aa1\"",
+              "published-at = \"0x7be18d6294e533bedd9a5d70a96ce8d9d4b87a7c74188ba65d3fe966bbed9d92\"",
               "published-at = \"0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef\"",
             );
             return Promise.resolve(createManifestResponse(drifted));
           }
 
-          if (url.includes("/v0.0.21/contracts/world/Published.toml")) {
+          if (url.includes("/d3c7016b48a796ee70ecff7b892316f2d0170282/contracts/world/Published.toml")) {
             return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
           }
 
@@ -265,7 +262,7 @@ describe("check-world-package-references", () => {
           if (url.includes("/main/contracts/world/Published.toml")) {
             return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
           }
-          if (url.includes("/v0.0.24/contracts/world/Published.toml") || url.includes("/v0.0.21/contracts/world/Published.toml")) {
+          if (url.includes("/d3c7016b48a796ee70ecff7b892316f2d0170282/contracts/world/Published.toml")) {
             return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
           }
 
@@ -280,7 +277,7 @@ describe("check-world-package-references", () => {
                   asMoveObject: {
                     contents: {
                       type: {
-                        repr: "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75::object_registry::ObjectRegistry",
+                        repr: "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230::object_registry::ObjectRegistry",
                       },
                     },
                   },
@@ -310,7 +307,7 @@ describe("check-world-package-references", () => {
         fetch: vi.fn((input: string | URL | Request) => {
           const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
 
-          if (url.includes("/main/contracts/world/Published.toml") || url.includes("/v0.0.24/") || url.includes("/v0.0.21/")) {
+          if (url.includes("/main/contracts/world/Published.toml") || url.includes("/d3c7016b48a796ee70ecff7b892316f2d0170282/")) {
             return Promise.resolve(createManifestResponse(COHERENT_MANIFEST));
           }
           if (isSuiTestnetGraphQlEndpoint(url)) {

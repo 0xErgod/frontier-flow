@@ -588,8 +588,8 @@ describe("deployGradeCompiler", () => {
   });
 
   it("links upgraded world packages through the original package id during deploy-grade compilation", async () => {
-    const currentWorldPackageId = "0x07e6b810c2dff6df56ea7fbad9ff32f4d84cbee53e496267515887b712924bd1";
-    const originalWorldPackageId = "0xd12a70c74c1e759445d6f209b01d43d860e97fcf2ef72ccbbd00afd828043f75";
+    const currentWorldPackageId = "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230";
+    const originalWorldPackageId = "0x28eab6a6e9e12808a15901b12fcd3adfb07317d716dcaeb3f2965e25c7da0230";
     const resolvedDependencies: ResolvedDependencies = {
       files: "{}",
       dependencies: JSON.stringify([
