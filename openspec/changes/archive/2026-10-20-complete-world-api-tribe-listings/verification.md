@@ -34,4 +34,6 @@ Both consumers were executed against the live service, before and after the chan
 - `bun run lint` — passes; one pre-existing `react-hooks(exhaustive-deps)` warning in `src/hooks/useGraphTransfer.ts`, untouched by this change.
 - `bun run typecheck` — passes.
 - `bunx vitest run` — 119 files passed, 1 skipped; 935 tests passed, 1 skipped.
-- `bun run test:security` and the Playwright suites were not run here: this Windows checkout hits documented platform-only failures in those suites caused by CRLF fixtures, unrelated to this change.
+- `bunx playwright test` — 68 passed, 22 skipped. The built-app World API spec asserted the collection URL in three places;
+  all three now resolve it through the shared URL builder rather than restating it, so a changed page size cannot break them again.
+- `bun run test:security` was not run here: this Windows checkout hits documented platform-only failures in that suite caused by CRLF fixtures, unrelated to this change.
